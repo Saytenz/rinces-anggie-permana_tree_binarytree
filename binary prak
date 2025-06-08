@@ -1,0 +1,112 @@
+class Node {
+  int value;
+  Node? left;
+  Node? right;
+
+  Node(this.value);
+}
+
+class BinarySearchTree {
+  Node? root;
+
+  // Menambahkan node baru ke BST
+  void insert(int value) {
+    root = _insertRecursive(root, value);
+  }
+
+  Node _insertRecursive(Node? node, int value) {
+    if (node == null) {
+      return Node(value);
+    }
+
+    if (value < node.value) {
+      node.left = _insertRecursive(node.left, value);
+    } else if (value > node.value) {
+      node.right = _insertRecursive(node.right, value);
+    }
+    return node;
+  }
+
+  // Traversal PostOrder (Left, Right, Root)
+  void postOrderTraversal(Node? node, List<int> result) {
+    if (node == null) return;
+
+    postOrderTraversal(node.left, result);
+    postOrderTraversal(node.right, result);
+    result.add(node.value);
+  }
+
+  // Cari node dengan nilai tertentu
+  Node? search(int value) {
+    return _searchRecursive(root, value);
+  }
+
+  Node? _searchRecursive(Node? node, int value) {
+    if (node == null) return null;
+    if (node.value == value) return node;
+
+    if (value < node.value) {
+      return _searchRecursive(node.left, value);
+    } else {
+      return _searchRecursive(node.right, value);
+    }
+  }
+
+  // Cari nilai terkecil (paling kiri)
+  int? findMin() {
+    if (root == null) return null;
+    Node current = root!;
+    while (current.left != null) {
+      current = current.left!;
+    }
+    return current.value;
+  }
+
+  // Cari nilai terbesar (paling kanan)
+  int? findMax() {
+    if (root == null) return null;
+    Node current = root!;
+    while (current.right != null) {
+      current = current.right!;
+    }
+    return current.value;
+  }
+}
+
+void main() {
+  BinarySearchTree bst = BinarySearchTree();
+
+  // Menambahkan node sesuai soal
+  List<int> values = [10, 5, 20, 2, 6, 19, 25, 21];
+  for (var v in values) {
+    bst.insert(v);
+  }
+
+  // Traversal PostOrder
+  List<int> postOrderResult = [];
+  bst.postOrderTraversal(bst.root, postOrderResult);
+  print("Traversal PostOrder: $postOrderResult");
+
+  // Cari node dengan nilai 19
+  Node? node19 = bst.search(19);
+  print(node19 != null ? "Node 19 ditemukan" : "Node 19 tidak ditemukan");
+
+  // Cari node dengan nilai 55
+  Node? node55 = bst.search(55);
+  print(node55 != null ? "Node 55 ditemukan" : "Node 55 tidak ditemukan");
+
+  // Tambah node 56
+  bst.insert(56);
+  print("Setelah menambahkan node 56:");
+
+  // Traversal PostOrder ulang untuk cek
+  postOrderResult.clear();
+  bst.postOrderTraversal(bst.root, postOrderResult);
+  print("Traversal PostOrder: $postOrderResult");
+
+  // Nilai terkecil dan terbesar
+  int? minValue = bst.findMin();
+  int? maxValue = bst.findMax();
+  print("Nilai terkecil: $minValue");
+  print("Nilai terbesar: $maxValue");
+}
