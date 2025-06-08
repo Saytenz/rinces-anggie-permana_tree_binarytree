@@ -1,0 +1,59 @@
+class TNode<T> {
+  T data;
+  TNode<T>? left;
+  TNode<T>? right;
+
+  TNode(this.data);
+}
+
+class BinaryTree<T> {
+  TNode<T>? root;
+
+  BinaryTree();
+
+  // Copy seluruh tree mulai dari node t
+  TNode<T>? copyTree(TNode<T>? t) {
+    if (t == null) return null;
+
+    TNode<T> newNode = TNode(t.data);
+    newNode.left = copyTree(t.left);
+    newNode.right = copyTree(t.right);
+
+    return newNode;
+  }
+
+  // Traversal inorder untuk tes
+  void inorderTraversal(TNode<T>? node) {
+    if (node != null) {
+      inorderTraversal(node.left);
+      print(node.data);
+      inorderTraversal(node.right);
+    }
+  }
+
+  // Method untuk print dari root
+  void printInOrder() {
+    inorderTraversal(root);
+  }
+}
+
+
+void main() {
+  // Buat tree pertama
+  BinaryTree<String> tree1 = BinaryTree<String>();
+  tree1.root = TNode("A");
+  tree1.root!.left = TNode("B");
+  tree1.root!.right = TNode("C");
+  tree1.root!.left!.left = TNode("D");
+  tree1.root!.left!.right = TNode("E");
+
+  print("Inorder Tree Asli:");
+  tree1.printInOrder();
+
+  // Buat tree kedua dari salinan
+  BinaryTree<String> tree2 = BinaryTree<String>();
+  tree2.root = tree1.copyTree(tree1.root);
+
+  print("\nInorder Tree Salinan:");
+  tree2.printInOrder();
+}
